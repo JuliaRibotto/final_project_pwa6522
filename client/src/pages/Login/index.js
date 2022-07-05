@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { handleLogin } from '../../services/authentication';
 import { Navigate } from "react-router-dom";
-import { AuthorizationContext } from '../../context/authorization';
 import { StoreContext } from '../../context/store';
 import { CHANGE_LOGGED_IN } from '../../reducers/action';
 
@@ -36,6 +35,8 @@ export default function Login() {
                 type: CHANGE_LOGGED_IN,
                 payload: true
             });
+
+            
 
         }).catch((error)=>{
 

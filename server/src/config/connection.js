@@ -1,16 +1,16 @@
-const {connection, MYSQL, MONGO} = require('./database');
+const {connection, SQL, MONGO} = require('./database');
 
 let initDatabase;
 
 switch(connection) {
-    case MYSQL:
+    case SQL:
         initDatabase = require('./sql/init');
         break;
     case MONGO:
         initDatabase = require('./mongo/init');
         break;
     default:
-        throw `Must be specified DB_CONNECTION and only can be ${MYSQL} or ${MONGO}`;
+        throw `Must specify DB_CONNECTION, it can only be ${SQL} or ${MONGO}`;
 };
 
 module.exports = initDatabase;

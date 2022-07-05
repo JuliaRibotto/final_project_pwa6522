@@ -7,10 +7,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import { useReducer, useState } from "react";
-import { AuthorizationContext } from "./context/authorization";
+import { useReducer } from "react";
 import AuthMiddleware from "./middleware/Auth";
-import { ThemeContext } from "./context/theme";
 import { StoreContext } from "./context/store";
 import { globalReducer } from "./reducers/global";
 
@@ -20,7 +18,7 @@ export default function App() {
 
   const [globalState, setGlobalState] = useReducer(globalReducer, {
     isLoggedIn: false,
-    isDarkMode: true
+    isDarkMode: true,
   });
 
   const { isDarkMode } = globalState;
@@ -29,6 +27,7 @@ export default function App() {
     globalState,
     setGlobalState
   };
+
 
   const theme = createTheme({
     palette: {

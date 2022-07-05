@@ -1,12 +1,13 @@
-const { getHashedPassword } = require("../helpers/handleEncrypt");
 const { userModel } = require("../models");
+const { getHashedPassword, isTheSameHash } = require("../helpers/handleEncrypt");
+const { getJSONWebToken } = require("../helpers/handleJWT");
 
 
-const handleRegister = async (req,res)=>{
-    
+const handleRegister = async (req, res) => {
+
     try {
 
-        const {name, email, password, avatar, image} = req.body;
+        const { name, email, password, avatar, image } = req.body;
 
         if (!name || !email || !password || !avatar || !image) {
             return res.json({
@@ -22,9 +23,11 @@ const handleRegister = async (req,res)=>{
 
         await userModel.customCreate(data);
 
+        res.status(201);
+        
         return res.json({
-            message: "user registered",  
-            body:{
+            message: "Creado Satisfactoriamente",
+            body: {
                 name,
                 email,
                 avatar,
@@ -32,46 +35,54 @@ const handleRegister = async (req,res)=>{
             }
         });
 
-    } catch(error) {
+    } catch (error) {
         //console.log(error)
         res.status(500);
-        res.json({"error":error});
+        res.json({ error: "This user has already been registered" });
 
     }
-
-
 };
 
-const handleLogin = (req,res)=>{
+const handleLogin = async (req, res) => {
 
-    const {email,password} = req.body;
+    try {
+        const { email, password } = req.body;
 
-    if(!email || !password) {
-        return res.json({
-            error: "email and password required"
-        })
-    }
+        const user = await userModel.customFind({ email: email });
 
-    if(email!='test@test.com') {
-        return res.json({
-            error: "user not registered"
-        })
-    }
+        if (!user) {
+            //bad request
+            res.status(400);
+            return res.json({ error: "Usuario no registrado" });
+        };
 
-    if(password!='test') {
-        return res.json({
-            error: "incorrect password"
-        })
-    }
+        const isAuthorized = await isTheSameHash(password, user.password);
 
-    return res.json({
-        message: "user logged in",
-        body: {
-            token:"your token"
+        if (!isAuthorized) {
+            res.status(400);
+            return res.json({ error: "Credenciales incorrectas" });
         }
-    })
 
+        const token = getJSONWebToken(user);
+        
+        //setCookie(req, token);
+
+        res.status(201);
+
+        return res.json({
+            message: "Logueado Satisfactoriamente",
+            //al loguearse me devuelve un objeto como el token para poder compararlo con el token que setee como cookie
+            body: {
+                token,
+            }
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+        return res.json({ error:"server_error", message: "authControllerError" });
+    }
 };
 
 
-module.exports = {handleRegister, handleLogin};
+module.exports = { handleRegister, handleLogin };

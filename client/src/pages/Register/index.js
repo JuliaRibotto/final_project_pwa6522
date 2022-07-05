@@ -1,12 +1,11 @@
 import { Button, Card, FormControl, FormHelperText, Input, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useContext, useState, useReducer } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthorizationContext } from "../../context/authorization";
 import { getAllCharacters } from '../../services/api';
 import { handleRegister } from "../../services/authentication";
 import toast from 'react-hot-toast';
 import reducerFunction from "./reducer";
-import { CHANGE_AVATAR_AND_IMAGE, CHANGE_EMAIL, CHANGE_NAME, CHANGE_PASSWORD } from "./actions";
+import { changeAvatarAndImage, changeEmail, changeName, changePassword } from "./actions";
 import { StoreContext } from "../../context/store";
 
 export default function Register() {
@@ -63,40 +62,15 @@ export default function Register() {
     };
 
     const handleChangeEmail = (event) => {
-
-        setRegisterState({
-            type: CHANGE_EMAIL,
-            payload: event.target.value
-        });
-
-        // setRegisterState({
-        //     ...registerState,
-        //     email: event.target.value
-        // });
+        setRegisterState(changeEmail(event.target.value));
     };
 
     const handleChangePassword = (event) => {
-
-        setRegisterState({
-            type: CHANGE_PASSWORD,
-            payload: event.target.value
-        });
-        // setRegisterState({
-        //     ...registerState,
-        //     password: event.target.value
-        // })
+        setRegisterState(changePassword(event.target.value));
     };
 
     const handleChangeName = (event) => {
-
-        setRegisterState({
-            type: CHANGE_NAME,
-            payload: event.target.value
-        });
-        // setRegisterState({
-        //     ...registerState,
-        //     name: event.target.value
-        // })
+        setRegisterState(changeName(event.target.value));
     };
 
     const handleChangeAvatar = (event) => {
@@ -105,23 +79,11 @@ export default function Register() {
 
         const newAvatarObject = avatars.find(element=>{
             return element.name === newAvatar
-        })
+        });
 
         const newImage = newAvatarObject.image;
 
-        setRegisterState({
-            type: CHANGE_AVATAR_AND_IMAGE,
-            payload: {
-                avatar: newAvatar,
-                image: newImage
-            }
-        });
-
-        // setRegisterState({
-            //     ...registerState,
-            //     avatar: newAvatar,
-            //     image: newImage
-            // })
+        setRegisterState(changeAvatarAndImage(newAvatar, newImage));
         
     };
 
@@ -189,7 +151,6 @@ export default function Register() {
 
                     </FormControl>
 
-
                     <Button type="submit" variant="contained" sx={{
                         backgroundColor: 'black',
                         border: '2px solid white',
@@ -197,8 +158,6 @@ export default function Register() {
                     }}>
                         Registrarse
                     </Button>
-
-
 
                 </Card >
             </form>

@@ -1,4 +1,4 @@
-//Trabajo MySQL con sequelize
+//Trabajo SQL con sequelize
 
 const {DataTypes} = require('sequelize');
 const sequelize = require('../../config/sql/connection');
@@ -23,7 +23,7 @@ const User = sequelize.define('User', {
     },
     image: {
       type: DataTypes.STRING,
-  }
+    }
   }, {
     tableName: 'users'
 });

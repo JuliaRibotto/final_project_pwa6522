@@ -1,4 +1,6 @@
+
 const bcrypt = require('bcrypt');
+//TODO: sacar variable de entorno
 const saltRounds = 10;
 
 const isTheSameHash = (plainPassword,hashedPassword) => {
